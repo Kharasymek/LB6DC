@@ -11,6 +11,11 @@ def read_json(file_path):
             print(f"Błąd podczas odczytu pliku JSON: {e}")
             return None
 
+def write_json(file_path, data):
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+        print("Dane zapisane do pliku JSON pomyślnie")
+
 def main():
     parser = argparse.ArgumentParser(description='Konwersja plików między formatami .xml, .json i .yml.')
     parser.add_argument('input_file', type=str, help='Ścieżka do pliku wejściowego')
@@ -25,6 +30,9 @@ def main():
         data = read_json(args.input_file)
         if data is None:
             return
+
+    if args.output_file.endswith('.json'):
+        write_json(args.output_file, data)
 
 if __name__ == "__main__":
     main()
