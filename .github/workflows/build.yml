@@ -1,0 +1,38 @@
+name: Build and Upload
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 0'  # Co tydzień w niedzielę o północy
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install pyinstaller
+        pip install PyQt5
+        pip install pyyaml
+        pip install xmltodict
+
+    - name: Build executable
+      run: pyinstaller --onefile --noconsole converter.py
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: converter
+        path: dist/converter.exe
